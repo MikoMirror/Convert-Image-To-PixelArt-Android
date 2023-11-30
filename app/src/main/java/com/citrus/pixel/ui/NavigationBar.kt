@@ -1,4 +1,5 @@
 package com.citrus.pixel.ui
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.citrus.pixel.utils.ExportImage
 import com.citrus.pixel.utils.Pixelization
 import com.cytrus.pixelarr.R
 
@@ -38,7 +40,8 @@ fun CustomNavigationBar(
     onModeChange: (ActionMode) -> Unit,
     pixelization: Pixelization,
     displayedBitmapState: MutableState<Bitmap>,
-    originalBitmap: Bitmap
+    originalBitmap: Bitmap,
+    context: Context
 ) {
     val navBarHeight = when (currentMode.value) {
         ActionMode.NORMAL, ActionMode.GRID -> 56.dp
@@ -58,7 +61,7 @@ fun CustomNavigationBar(
         contentAlignment = Alignment.Center
     ) {
         when (currentMode.value) {
-            ActionMode.NORMAL -> NormalModeIcons(onModeChange)
+            ActionMode.NORMAL -> NormalModeIcons(onModeChange, displayedBitmapState.value, context)
             ActionMode.PIXELIZE -> PixelizeSlider(onModeChange, pixelization, displayedBitmapState, originalBitmap)
             ActionMode.GRID -> GridModeIcons(onModeChange)
         }
@@ -66,11 +69,11 @@ fun CustomNavigationBar(
 }
 
 @Composable
-fun NormalModeIcons(onModeChange: (ActionMode) -> Unit) {
+fun NormalModeIcons(onModeChange: (ActionMode) -> Unit, displayedBitmap: Bitmap, context: Context) {
     val actions = listOf(
         Pair(R.drawable.convert) { onModeChange(ActionMode.PIXELIZE) },
         Pair(R.drawable.draw) {},
-        Pair(R.drawable.save) {},
+        Pair(R.drawable.save) { ExportImage().saveImage(displayedBitmap, context)},
         Pair(R.drawable.grid_on) { onModeChange(ActionMode.GRID) }
     )
     ActionRow(actions)

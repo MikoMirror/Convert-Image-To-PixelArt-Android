@@ -19,10 +19,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import com.citrus.pixel.utils.Pixelization
 
 @Composable
 fun MainScreen(originalBitmap: Bitmap, pixelization: Pixelization, displayedBitmapState: MutableState<Bitmap>) {
+    val context = LocalContext.current
     val currentMode = remember { mutableStateOf(ActionMode.NORMAL) }
 
     LaunchedEffect(pixelization.sliderValue.value) {
@@ -65,7 +67,8 @@ fun MainScreen(originalBitmap: Bitmap, pixelization: Pixelization, displayedBitm
             onModeChange = { newMode -> currentMode.value = newMode },
             pixelization = pixelization,
             displayedBitmapState = displayedBitmapState,
-            originalBitmap = originalBitmap
+            originalBitmap = originalBitmap,
+            context = context
         )
     }
 }
