@@ -18,8 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -42,30 +46,34 @@ fun StartScreenUI() {
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.White),
-        contentAlignment = Alignment.BottomCenter
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF0D47A1)),
+        contentAlignment = Alignment.Center
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.background),
+            contentDescription = "Background Image",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
         Column(
-            modifier = Modifier.padding(bottom = 60.dp),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.Center
         ) {
-            ClippedCornerButton(text = "Convert Image to PixelArt") {
+            CustomButton(text = "Convert Image to PixelArt") {
                 val pickIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
                     type = "image/*"
                 }
                 imagePicker.launch(pickIntent)
             }
-            ClippedCornerButton(text = "New Empty Project") {}
-            ClippedCornerButton(text = "Load Project") {}
         }
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-
 @Composable
-fun ClippedCornerButton(text: String, onClick: () -> Unit) {
+fun CustomButton(text: String, onClick: () -> Unit) {
     val customFontFamily = FontFamily(Font(R.font.pixellari))
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -76,10 +84,19 @@ fun ClippedCornerButton(text: String, onClick: () -> Unit) {
 
     Button(
         onClick = onClick,
-        modifier = Modifier.size(buttonWidth, buttonHeight),
+        modifier = Modifier
+            .size(buttonWidth, buttonHeight)
+            .border(2.dp, Color.White, ClippedCornerShape(clipDp = 20)),
         shape = ClippedCornerShape(clipDp = 20),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4F94C0))
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF4F94C0).copy(alpha = 0.7f)
+        )
     ) {
-        Text(text, fontFamily = customFontFamily, fontSize = fontSizeValue.sp)
+        Text(
+            text,
+            fontFamily = customFontFamily,
+            fontSize = fontSizeValue.sp,
+            color = Color.White
+        )
     }
 }

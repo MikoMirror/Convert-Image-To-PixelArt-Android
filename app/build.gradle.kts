@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation ("com.google.accompanist:accompanist-pager:0.32.0")
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     //-------------------------------------------------
     implementation("androidx.core:core-ktx:1.12.0")
