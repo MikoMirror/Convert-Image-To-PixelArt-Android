@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -74,28 +75,31 @@ fun StartScreenUI() {
 
 @Composable
 fun CustomButton(text: String, onClick: () -> Unit) {
-    val customFontFamily = FontFamily(Font(R.font.pixellari))
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
-    val buttonWidth = screenWidth * 0.9f
-    val buttonHeight = screenHeight * 0.1f
-    val fontSizeValue = screenHeight.value * 0.030f
+    val customFontFamily = FontFamily(Font(R.font.pixellari))
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val screenHeight = configuration.screenHeightDp.dp
+    val buttonWidth = screenWidth * 0.8f
+    val buttonHeight = screenHeight * 0.08f
+    val fontSizeValue = screenHeight * 0.025f
+
+    val cornerRadius = 20.dp
 
     Button(
         onClick = onClick,
         modifier = Modifier
             .size(buttonWidth, buttonHeight)
-            .border(2.dp, Color.White, ClippedCornerShape(clipDp = 20)),
-        shape = ClippedCornerShape(clipDp = 20),
+            .border(width = 2.dp, color = Color.White, shape = RoundedCornerShape(cornerRadius)),
+        shape = RoundedCornerShape(cornerRadius),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF4F94C0).copy(alpha = 0.7f)
+            containerColor = Color(0xFF4F94C0)
         )
     ) {
         Text(
             text,
             fontFamily = customFontFamily,
-            fontSize = fontSizeValue.sp,
+            fontSize = 20.sp,
             color = Color.White
         )
     }

@@ -4,50 +4,57 @@ package com.citrus.pixel.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.citrus.pixel.ui.MainScreen
-import com.citrus.pixel.utils.Pixelization
+import com.citrus.pixel.utils.MainViewModel
 import java.io.IOException
 
 class ConvertActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val imageUri = intent.getStringExtra("imageUri")
+
         setContent {
-            ConvertImageScreen(intent.getStringExtra("imageUri"))
+            ConvertImageScreen(imageUri)
         }
-        val colorInt = Color(0xFF004069).toArgb()
+
+        val colorInt = android.graphics.Color.parseColor("#004069")
         window.navigationBarColor = colorInt
     }
 
     @Composable
     fun ConvertImageScreen(imageUri: String?) {
+        val viewModel: MainViewModel = viewModel()
         val context = LocalContext.current
-        val originalBitmap = imageUri?.let {
-            Uri.parse(it).toBitmap(context)
-        } ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        val originalBitmap = remember(imageUri) {
+            imageUri?.let {
+                loadBitmapFromUri(context, Uri.parse(it))
+            } ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        }
+        LaunchedEffect(originalBitmap) {
+            viewModel.setOriginalBitmap(originalBitmap)
+        }
 
-        val currentBitmap = rememberSaveable { mutableStateOf(originalBitmap) }
-        val displayedBitmapState = rememberSaveable { mutableStateOf(originalBitmap) }
-        val pixelization = remember { Pixelization() }
 
         Box(
             modifier = Modifier
@@ -56,16 +63,25 @@ class ConvertActivity : ComponentActivity() {
             contentAlignment = Alignment.Center
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                MainScreen(currentBitmap.value, pixelization, displayedBitmapState)
+                MainScreen(viewModel = viewModel)
             }
         }
     }
-}
-private fun Uri.toBitmap(context: Context): Bitmap {
-    return try {
-        MediaStore.Images.Media.getBitmap(context.contentResolver, this)
-    } catch (exception: IOException) {
-        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+
+
+    private fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            }
+        } catch (exception: IOException) {
+            Log.e("ConvertActivity", "Error loading bitmap: ${exception.message}")
+            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        }
     }
 }
 

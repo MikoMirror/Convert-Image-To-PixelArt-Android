@@ -13,22 +13,30 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.citrus.pixel.utils.Pixelization
+import com.citrus.pixel.utils.MainViewModel
+import com.citrus.pixel.utils.areAnimationsEnabled
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.setValue
 
 val TopBarHeight = 56.dp
-val NavBarHeight = 112.dp
 
 @Composable
-fun MainScreen(originalBitmap: Bitmap, pixelization: Pixelization, displayedBitmapState: MutableState<Bitmap>) {
+fun MainScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
-
-    LaunchedEffect(pixelization.sliderValue) {
-        displayedBitmapState.value = pixelization.toPixelizedBitmap(originalBitmap)
+    val animateNavBarIn = remember { mutableStateOf(false) }
+    val displayedBitmapState = viewModel.pixelizedBitmap.observeAsState()
+    LaunchedEffect(displayedBitmapState.value) {
+        val delayDuration = if (areAnimationsEnabled(context)) 100 else 0
+        delay(delayDuration.toLong())
+        animateNavBarIn.value = true
     }
+
 
     var scale by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
-    val state = rememberTransformableState { zoomChange, offsetChange, _ ->
+    val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
         scale *= zoomChange
         offset = Offset(offset.x + offsetChange.x, offset.y + offsetChange.y)
     }
@@ -36,27 +44,27 @@ fun MainScreen(originalBitmap: Bitmap, pixelization: Pixelization, displayedBitm
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(TopBarHeight))
 
-        Image(
-            bitmap = displayedBitmapState.value.asImageBitmap(),
-            contentDescription = null,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offset.x,
-                    translationY = offset.y
-                )
-                .transformable(state = state),
-            contentScale = ContentScale.Fit
-        )
+        displayedBitmapState.value?.let { pixelizedBitmap ->
+            Image(
+                bitmap = pixelizedBitmap.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offset.x,
+                        translationY = offset.y
+                    )
+                    .transformable(state = transformState),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         CustomNavigationBar(
-            pixelization = pixelization,
-            displayedBitmapState = displayedBitmapState,
-            originalBitmap = originalBitmap,
-            context = context
+          viewModel = viewModel,
+            isAnimatingIn = animateNavBarIn.value
         )
     }
 }
