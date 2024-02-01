@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.citrus.pixel.viewmodels.ConvertActivity
@@ -49,11 +50,11 @@ fun StartScreenUI() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D47A1)),
+            .background(Color(0xFF000000)),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painter = painterResource(id = R.drawable.background2),
             contentDescription = "Background Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -75,32 +76,31 @@ fun StartScreenUI() {
 
 @Composable
 fun CustomButton(text: String, onClick: () -> Unit) {
-
     val customFontFamily = FontFamily(Font(R.font.pixellari))
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
     val buttonWidth = screenWidth * 0.8f
-    val buttonHeight = screenHeight * 0.08f
-    val fontSizeValue = screenHeight * 0.025f
-
-    val cornerRadius = 20.dp
+    val buttonHeight = screenHeight * 0.12f
+    val cornerRadius = 12.dp
 
     Button(
         onClick = onClick,
         modifier = Modifier
             .size(buttonWidth, buttonHeight)
-            .border(width = 2.dp, color = Color.White, shape = RoundedCornerShape(cornerRadius)),
+            .border(width = 2.dp, color = Color.Black, shape = RoundedCornerShape(cornerRadius)),
         shape = RoundedCornerShape(cornerRadius),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF4F94C0)
+            containerColor = Color(0xFFFCFFED)
         )
     ) {
         Text(
-            text,
+            text = text,
             fontFamily = customFontFamily,
-            fontSize = 20.sp,
-            color = Color.White
+            fontSize = 26.sp,
+            color = Color.Black,
+            lineHeight = 26.sp,
+            textAlign = TextAlign.Center
         )
     }
 }

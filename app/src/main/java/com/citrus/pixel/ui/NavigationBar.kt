@@ -1,6 +1,5 @@
 package com.citrus.pixel.ui
 import android.content.Context
-import android.graphics.Bitmap
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -8,16 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -46,7 +43,7 @@ fun CustomNavigationBar(
             .height(navBarHeight)
             .offset(y = offsetY)
             .background(
-                color = Color(0xFF004069),
+                color = Color(0xFFFFFBD5),
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
             ),
         contentAlignment = Alignment.Center
@@ -77,6 +74,11 @@ fun PixelizeControls(
                 viewModel.updateSliderValue(newValue)
             },
             valueRange = 0.1f..1.5f,
+            colors = SliderDefaults.colors(
+                thumbColor = Color.Yellow,
+                activeTrackColor = Color.Green,
+                inactiveTrackColor = Color.Gray
+            ),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 8.dp)

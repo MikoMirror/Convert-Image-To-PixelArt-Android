@@ -38,7 +38,7 @@ class ConvertActivity : ComponentActivity() {
             ConvertImageScreen(imageUri)
         }
 
-        val colorInt = android.graphics.Color.parseColor("#004069")
+        val colorInt = android.graphics.Color.parseColor("#FFFFFBD5")
         window.navigationBarColor = colorInt
     }
 
@@ -59,7 +59,7 @@ class ConvertActivity : ComponentActivity() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF001929)),
+                .background(Color(0xFF7A444A)),
             contentAlignment = Alignment.Center
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
