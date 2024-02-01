@@ -19,11 +19,16 @@ import kotlinx.coroutines.delay
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.toggleScale
+import net.engawapg.lib.zoomable.zoomable
 
 val TopBarHeight = 56.dp
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
+    val zoomState = rememberZoomState()
+    val targetScale = 3f
     val context = LocalContext.current
     val animateNavBarIn = remember { mutableStateOf(false) }
     val displayedBitmapState = viewModel.pixelizedBitmap.observeAsState()
@@ -51,13 +56,13 @@ fun MainScreen(viewModel: MainViewModel) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .graphicsLayer(
-                        scaleX = scale,
-                        scaleY = scale,
-                        translationX = offset.x,
-                        translationY = offset.y
-                    )
-                    .transformable(state = transformState),
+                    .transformable(state = transformState)
+                    .zoomable(
+                        zoomState = zoomState,
+                        onDoubleTap = { position ->
+                            zoomState.toggleScale(targetScale, position)
+                        }
+                    ),
                 contentScale = ContentScale.Fit
             )
         }
