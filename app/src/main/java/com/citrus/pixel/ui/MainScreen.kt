@@ -25,53 +25,52 @@ val TopBarHeight = 56.dp
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val zoomState = rememberZoomState()
-    val targetScale = 3f
     val context = LocalContext.current
-    val animateNavBarIn = remember { mutableStateOf(false) }
     val displayedBitmapState = viewModel.pixelizedBitmap.observeAsState()
-    val isImageLoaded = remember { mutableStateOf(false) }
+    val isNavBarVisible = remember { mutableStateOf(false) }
+    val isAnimatingIn = remember { mutableStateOf(false) }
+
 
     LaunchedEffect(displayedBitmapState.value) {
         if (displayedBitmapState.value != null) {
+            isNavBarVisible.value = true
             val delayDuration = if (areAnimationsEnabled(context)) 150 else 0
             delay(delayDuration.toLong())
-            isImageLoaded.value = true
-            animateNavBarIn.value = true
+            isAnimatingIn.value = true
         }
     }
 
+    val zoomState = rememberZoomState()
     var scale by remember { mutableStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset(0f, 0f)) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
     val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
         scale *= zoomChange
-        offset = Offset(offset.x + offsetChange.x, offset.y + offsetChange.y)
+        offset += offsetChange
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.height(TopBarHeight))
+        Spacer(modifier = Modifier.height(32.dp))
 
         displayedBitmapState.value?.let { pixelizedBitmap ->
             Image(
                 bitmap = pixelizedBitmap.asImageBitmap(),
-                contentDescription = null,
+                contentDescription = "Pixelized Image",
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .transformable(state = transformState)
-                    .zoomable(
-                        zoomState = zoomState,
-                        onDoubleTap = { position ->
-                            zoomState.toggleScale(targetScale, position)
-                        }
-                    ),
+                    .zoomable(zoomState = zoomState, onDoubleTap = { position ->
+                        zoomState.toggleScale(3f, position)
+                    }),
                 contentScale = ContentScale.Fit
             )
         }
 
+        if (isNavBarVisible.value) {
             CustomNavigationBar(
                 viewModel = viewModel,
-                isAnimatingIn = animateNavBarIn.value
+                isAnimatingIn = isAnimatingIn.value
             )
         }
     }
+}

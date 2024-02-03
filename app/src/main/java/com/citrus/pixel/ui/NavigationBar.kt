@@ -33,27 +33,20 @@ fun CustomNavigationBar(
     viewModel: MainViewModel,
     isAnimatingIn: Boolean
 ) {
-    val navBarHeight = 112.dp
     val offsetY = animateDpAsState(
-        targetValue = if (isAnimatingIn) 0.dp else navBarHeight,
+        targetValue = if (isAnimatingIn) 0.dp else 112.dp,
         animationSpec = tween(durationMillis = 500), label = ""
     )
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(navBarHeight)
+            .height(112.dp)
             .offset(y = offsetY.value)
-            .background(
-                color = Color(0xFFFFFBD5),
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-            ),
+            .background(color = Color(0xFFFFFBD5), shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         contentAlignment = Alignment.Center
     ) {
-        PixelizeControls(
-            viewModel = viewModel,
-            context = LocalContext.current
-        )
+        PixelizeControls(viewModel = viewModel, context = LocalContext.current)
     }
 }
 
