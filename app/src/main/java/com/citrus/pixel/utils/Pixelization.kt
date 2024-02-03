@@ -1,6 +1,5 @@
 package com.citrus.pixel.utils
 
-import androidx.compose.runtime.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -9,7 +8,7 @@ import android.graphics.Rect
 
 
 class Pixelization {
-    var sliderValue by mutableStateOf(0.1f)
+    var sliderValue = 0.1f
         private set
     fun updateSliderValue(newValue: Float) {
         sliderValue = newValue

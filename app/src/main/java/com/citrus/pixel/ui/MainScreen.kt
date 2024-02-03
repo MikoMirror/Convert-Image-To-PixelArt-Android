@@ -1,6 +1,5 @@
 package com.citrus.pixel.ui
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -9,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -32,12 +30,16 @@ fun MainScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     val animateNavBarIn = remember { mutableStateOf(false) }
     val displayedBitmapState = viewModel.pixelizedBitmap.observeAsState()
-    LaunchedEffect(displayedBitmapState.value) {
-        val delayDuration = if (areAnimationsEnabled(context)) 100 else 0
-        delay(delayDuration.toLong())
-        animateNavBarIn.value = true
-    }
+    val isImageLoaded = remember { mutableStateOf(false) }
 
+    LaunchedEffect(displayedBitmapState.value) {
+        if (displayedBitmapState.value != null) {
+            val delayDuration = if (areAnimationsEnabled(context)) 150 else 0
+            delay(delayDuration.toLong())
+            isImageLoaded.value = true
+            animateNavBarIn.value = true
+        }
+    }
 
     var scale by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
@@ -67,9 +69,9 @@ fun MainScreen(viewModel: MainViewModel) {
             )
         }
 
-        CustomNavigationBar(
-          viewModel = viewModel,
-            isAnimatingIn = animateNavBarIn.value
-        )
+            CustomNavigationBar(
+                viewModel = viewModel,
+                isAnimatingIn = animateNavBarIn.value
+            )
+        }
     }
-}

@@ -15,8 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +34,7 @@ fun CustomNavigationBar(
     isAnimatingIn: Boolean
 ) {
     val navBarHeight = 112.dp
-    val offsetY by animateDpAsState(
+    val offsetY = animateDpAsState(
         targetValue = if (isAnimatingIn) 0.dp else navBarHeight,
         animationSpec = tween(durationMillis = 500), label = ""
     )
@@ -41,7 +43,7 @@ fun CustomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(navBarHeight)
-            .offset(y = offsetY)
+            .offset(y = offsetY.value)
             .background(
                 color = Color(0xFFFFFBD5),
                 shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -60,20 +62,23 @@ fun PixelizeControls(
     viewModel: MainViewModel,
     context: Context
 ) {
+    val sliderRange = remember { mutableStateOf(0.1f..1.5f) }
+    LaunchedEffect(Unit) {
+        sliderRange.value = viewModel.getSliderRangeForImage()
+    }
     val pixelizedBitmap = viewModel.pixelizedBitmap.observeAsState().value
+    val sliderValue = viewModel.sliderValue.observeAsState(0.1f)
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        val sliderValue = viewModel.sliderValue.observeAsState(0.1f)
-
         Slider(
             value = sliderValue.value,
             onValueChange = { newValue ->
                 viewModel.updateSliderValue(newValue)
             },
-            valueRange = 0.1f..1.5f,
+            valueRange = sliderRange.value,
             colors = SliderDefaults.colors(
                 thumbColor = Color.Yellow,
                 activeTrackColor = Color.Green,
