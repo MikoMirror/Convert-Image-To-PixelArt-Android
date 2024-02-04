@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainViewModel : ViewModel() {
     private val _sliderValue = MutableLiveData<Float>(0.1f)
@@ -15,14 +18,23 @@ class MainViewModel : ViewModel() {
     private val _originalBitmap = MutableLiveData<Bitmap>()
     private val _pixelizedBitmap = MutableLiveData<Bitmap>()
     val pixelizedBitmap: LiveData<Bitmap> = _pixelizedBitmap
+    private var debounceJob: Job? = null
+    private val debounceDurationMillis = TimeUnit.MILLISECONDS.convert(200, TimeUnit.MILLISECONDS)
 
+    private fun debouncePixelizationUpdate() {
+        debounceJob?.cancel()
+        debounceJob = viewModelScope.launch(Dispatchers.Main) {
+            delay(debounceDurationMillis)
+            updatePixelizedBitmap()
+        }
+    }
     fun setOriginalBitmap(bitmap: Bitmap) {
         _originalBitmap.value = bitmap
         updatePixelizedBitmap()
     }
     fun updateSliderValue(newValue: Float) {
         _sliderValue.value = newValue
-        updatePixelizedBitmap()
+        debouncePixelizationUpdate()
     }
 
     private fun updatePixelizedBitmap() {
@@ -40,7 +52,7 @@ class MainViewModel : ViewModel() {
             bitmap.width <= 1280 -> 0.1f..1.5f // HD
             bitmap.width <= 1920 -> 0.1f..2.5f // Full HD
             bitmap.width <= 2560 -> 0.1f..3.5f // 2K
-            else -> 0.1f..4.0f // 4K and above
+            else -> 0.1f..4.5f // 4K and above
         }
     }
 }
