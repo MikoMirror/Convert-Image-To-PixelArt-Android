@@ -4,21 +4,27 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class Pixelization {
-    var sliderValue = 0.1f
-        private set
+    private var sliderValue = 0.1f
+
     fun updateSliderValue(newValue: Float) {
         sliderValue = newValue
     }
 
-    fun toPixelizedBitmap(bitmap: Bitmap): Bitmap {
-        val scaleFactor = determineScaleFactor()
-        val (scaledWidth, scaledHeight) = calculateScaledDimensions(bitmap, scaleFactor)
-
-        return createPixelizedBitmap(bitmap, scaledWidth, scaledHeight)
+    suspend fun toPixelizedBitmap(bitmap: Bitmap): Bitmap = withContext(Dispatchers.Default) {
+        try {
+            val scaleFactor = determineScaleFactor()
+            val (scaledWidth, scaledHeight) = calculateScaledDimensions(bitmap, scaleFactor)
+            createPixelizedBitmap(bitmap, scaledWidth, scaledHeight)
+        } catch (e: Exception) {
+            Log.e("Pixelization", "Failed to pixelize bitmap", e)
+            throw RuntimeException("Failed to pixelize bitmap: ${e.message}", e)
+        }
     }
 
     private fun determineScaleFactor(): Float = 1 + (sliderValue - 0.1f) * 12
@@ -31,7 +37,6 @@ class Pixelization {
 
     private fun createPixelizedBitmap(bitmap: Bitmap, scaledWidth: Int, scaledHeight: Int): Bitmap {
         val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-
         val miniBitmap = Bitmap.createScaledBitmap(mutableBitmap, scaledWidth, scaledHeight, false)
         val outputBitmap = Bitmap.createBitmap(mutableBitmap.width, mutableBitmap.height, Bitmap.Config.ARGB_8888)
         Canvas(outputBitmap).apply {
@@ -42,6 +47,7 @@ class Pixelization {
             }
             drawBitmap(miniBitmap, null, Rect(0, 0, mutableBitmap.width, mutableBitmap.height), paint)
         }
+        miniBitmap.recycle()
         return outputBitmap
     }
 }

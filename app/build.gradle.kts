@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
     implementation("androidx.compose.runtime:runtime-rxjava2:1.6.0")
     implementation("net.engawapg.lib:zoomable:1.5.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     //-------------------------------------------------
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
