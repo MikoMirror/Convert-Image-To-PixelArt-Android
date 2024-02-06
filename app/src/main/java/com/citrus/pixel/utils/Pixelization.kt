@@ -37,15 +37,15 @@ class Pixelization {
 
     private fun createPixelizedBitmap(bitmap: Bitmap, scaledWidth: Int, scaledHeight: Int): Bitmap {
         val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        val miniBitmap = Bitmap.createScaledBitmap(mutableBitmap, scaledWidth, scaledHeight, false)
+        val miniBitmap = Bitmap.createScaledBitmap(mutableBitmap, scaledWidth, scaledHeight, true)
         val outputBitmap = Bitmap.createBitmap(mutableBitmap.width, mutableBitmap.height, Bitmap.Config.ARGB_8888)
         Canvas(outputBitmap).apply {
             val paint = Paint().apply {
                 isAntiAlias = false
                 isFilterBitmap = false
-                isDither = true
+                isDither = false
             }
-            drawBitmap(miniBitmap, null, Rect(0, 0, mutableBitmap.width, mutableBitmap.height), paint)
+            drawBitmap(miniBitmap, null, Rect(0,  0, mutableBitmap.width, mutableBitmap.height), paint)
         }
         miniBitmap.recycle()
         return outputBitmap
