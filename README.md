@@ -52,9 +52,8 @@ displayed image to show the pixelated version.
 <hr>
 
 ## App Screenshot
-<p align="center">
-<img width="464" height="991" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/b8f9ca46-e2c4-4759-ab70-256bf8cbf75d"> 
-</p>
+
+![photo_2024-02-10_20-30-22](https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/155da6dc-f859-4752-b760-43f413621513)
 
 
 
