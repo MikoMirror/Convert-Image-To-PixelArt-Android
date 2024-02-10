@@ -1,7 +1,7 @@
 
 ![Ico2n](https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/e113b743-d572-4917-80e5-9e6c846a540c)
 
-# Convert-Image-To-PixelArt-Android-App
+# ToPixelArt
 ## Introduction
 Android app that allows users to apply a pixelated effect to images using a slider. Users can select an
 image from their device, adjust the pixelation level, and save the resulting pixelized image.
