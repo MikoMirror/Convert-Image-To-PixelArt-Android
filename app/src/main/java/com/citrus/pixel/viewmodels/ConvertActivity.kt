@@ -1,14 +1,11 @@
-@file:Suppress("DEPRECATION")
 
 package com.citrus.pixel.viewmodels
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -69,19 +66,34 @@ class ConvertActivity : ComponentActivity() {
     }
 
 
-    private fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap {
+    private fun loadBitmapFromUri(context: Context, uri: Uri, maxResolution: Int =   2048): Bitmap {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                @Suppress("DEPRECATION")
-                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+                BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, this)
+                inSampleSize = calculateInSampleSize(this, maxResolution, maxResolution)
+                inJustDecodeBounds = false
             }
+            BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, options)
+                ?: Bitmap.createBitmap(1,   1, Bitmap.Config.ARGB_8888)
         } catch (exception: IOException) {
             Log.e("ConvertActivity", "Error loading bitmap: ${exception.message}")
-            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(1,   1, Bitmap.Config.ARGB_8888)
         }
+    }
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize =  1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height /  2
+            val halfWidth = width /  2
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *=  2
+            }
+        }
+        return inSampleSize
     }
 }
 
