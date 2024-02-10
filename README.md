@@ -32,23 +32,23 @@ displayed image to show the pixelated version.
 <p><b>Example 1</b></p>
 <p>Original size: 1128x1382</p>
 <p>Density level: 0.71 </p>
-<p align="center">
-<img width="464" height="591" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/4c71897e-cb14-4d5d-9717-5b1497e80986"> <img width="464" height="591" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/e083b7bf-97fd-41e9-8475-da468c6b411f">
-</p>
+
+![Example2](https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/53162835-62fb-451c-b123-282b7c1e73f4)
+
 <hr>
 <p><b>Example 2</b></p>
 <p>Original size: 1128x1562</p>
 <p>Density level: 0.65 </p>
-<p align="center">
-<img width="464" height="691" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/c4eb0cc0-9de1-4d5f-953a-1cff212b72fb"> <img width="464" height="691" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/25ad9e31-761f-4f5b-8b9c-0808f78fb998">
-</p>
+
+![211](https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/b41bc263-0c9a-4f51-8ae8-244bf509f9b2)
+
 <hr>
 <p><b>Example 3</b></p>
 <p>Original size: 2140x4176</p>
 <p>Density level: 1.60 </p>
-<p align="center">
-<img width="464" height="691" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/2f6e903c-9687-4a69-b844-6271edf085df"> <img width="464" height="691" src="https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/734b1972-855a-44a8-a70e-3200069383b6">
-</p>
+
+![Example4](https://github.com/MikoMIm/Convert-Image-To-PixelArt-Android/assets/102617810/d60c22ca-38f7-4d23-8595-5d122c2b7de4)
+
 <hr>
 
 ## App Screenshot
