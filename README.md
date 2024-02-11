@@ -3,8 +3,7 @@
 
 # ToPixelArt
 ## Introduction
-Android app that allows users to apply a pixelated effect to images using a slider. Users can select an
-image from their device, adjust the pixelation level, and save the resulting pixelized image.
+Jetpack compose Android App that allows users to apply a pixelization effect to images using a slider. Users can select an image from their device, adjust the pixelation level and save the resulting pixelated image.
 ## Features
 * Simple and intuitive user interface.
 * Real-time preview of pixelation effects.
