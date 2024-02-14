@@ -21,7 +21,7 @@ import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.toggleScale
 import net.engawapg.lib.zoomable.zoomable
 
-val TopBarHeight = 56.dp
+
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {

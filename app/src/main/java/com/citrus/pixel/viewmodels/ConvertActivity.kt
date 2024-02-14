@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,11 +53,12 @@ class ConvertActivity : ComponentActivity() {
             viewModel.setOriginalBitmap(originalBitmap)
         }
 
-
+        val gradientColors = listOf(Color(0xFF9C5D64), Color(0xFF522327))
+        val gradientBrush = Brush.linearGradient(gradientColors)
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF7A444A)),
+                .background(brush = gradientBrush),
             contentAlignment = Alignment.Center
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
