@@ -18,12 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.citrus.pixel.ui.MainScreen
 import com.citrus.pixel.utils.MainViewModel
+import com.cytrus.pixelarr.R
 import java.io.IOException
 
 class ConvertActivity : ComponentActivity() {
@@ -36,7 +36,7 @@ class ConvertActivity : ComponentActivity() {
             ConvertImageScreen(imageUri)
         }
 
-        val colorInt = android.graphics.Color.parseColor("#FFFFFBD5")
+        val colorInt = android.graphics.Color.parseColor("#FFFFF8E3")
         window.navigationBarColor = colorInt
     }
 
@@ -44,6 +44,7 @@ class ConvertActivity : ComponentActivity() {
     fun ConvertImageScreen(imageUri: String?) {
         val viewModel: MainViewModel = viewModel()
         val context = LocalContext.current
+        val backgroundColor = colorResource(id = R.color.background)
         val originalBitmap = remember(imageUri) {
             imageUri?.let {
                 loadBitmapFromUri(context, Uri.parse(it))
@@ -52,13 +53,10 @@ class ConvertActivity : ComponentActivity() {
         LaunchedEffect(originalBitmap) {
             viewModel.setOriginalBitmap(originalBitmap)
         }
-
-        val gradientColors = listOf(Color(0xFF9C5D64), Color(0xFF522327))
-        val gradientBrush = Brush.linearGradient(gradientColors)
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(brush = gradientBrush),
+                .background(backgroundColor),
             contentAlignment = Alignment.Center
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
